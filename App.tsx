@@ -1,14 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-function counterReducer(state: number, action: any){
+
+type counterAction = 
+{type: "increment"; payload?: number} |
+{type: "decrement"} |
+{type: "decrement10"} |
+{type: "reset"};
+
+function counterReducer(state: number, action: counterAction){
   switch(action.type){
     case 'increment':
-      return state + 1;
+      return state + (action.payload ?? 1);
     case 'decrement':
       return state - 1;
+    case 'decrement10':
+        return state - 10;
+    case'reset':
+        return 0;
     default:
+      action satisfies never; // this is a type guard, it will throw an error if the action is not of type counterAction
       return state;
   }
 }
@@ -21,15 +33,27 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
 
+      <Pressable style={styles.button} onPress={() => dispatch({type: "increment", payload: 10})}>
+        <Text style={styles.buttonText}>+10</Text>
+      </Pressable>
+     
       <Pressable style={styles.button} onPress={() => dispatch({type: "increment"})}>
-        <Text style={styles.buttonText}>+</Text>
+        <Text style={styles.buttonText}>+1</Text>
       </Pressable>
       
+      <Pressable style={styles.button} onPress={() => dispatch({type: "reset"})}>
+        <Text style={styles.buttonText}>Reset</Text>
+      </Pressable>
       <Text style={styles.counterText}>{counter}</Text>
 
       <Pressable style={styles.button} onPress={() => dispatch({type: "decrement"})}>
-        <Text style={styles.buttonText}>-</Text>
+        <Text style={styles.buttonText}>-1</Text>
       </Pressable>
+
+      <Pressable style={styles.button} onPress={() => dispatch({type: "decrement10"})}>
+        <Text style={styles.buttonText}>-10</Text>
+      </Pressable>
+
     </View>
   );
 }
@@ -40,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     alignItems: 'center',
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   counterText: {
     fontSize: 80,
