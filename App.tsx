@@ -1,25 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-
-
+function counterReducer(state: number, action: any){
+  switch(action.type){
+    case 'increment':
+      return state + 1;
+    case 'decrement':
+      return state - 1;
+    default:
+      return state;
+  }
+}
 
 export default function App() {
 
-  const [counter, setCounter] = useState(0);
+  const [counter, dispatch] = useReducer(counterReducer, 12);
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <Pressable style={styles.button} onPress={() => setCounter(counter + 1)}>
+      <Pressable style={styles.button} onPress={() => dispatch({type: "increment"})}>
         <Text style={styles.buttonText}>+</Text>
       </Pressable>
       
       <Text style={styles.counterText}>{counter}</Text>
 
-      <Pressable style={styles.button} onPress={() => setCounter(counter - 1)}>
+      <Pressable style={styles.button} onPress={() => dispatch({type: "decrement"})}>
         <Text style={styles.buttonText}>-</Text>
       </Pressable>
     </View>
