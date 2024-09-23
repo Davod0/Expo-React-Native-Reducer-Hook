@@ -1,29 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { useReducer } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { counterReducer } from './counterReducer';
 
-
-type counterAction = 
-{type: "increment"; payload?: number} |
-{type: "decrement"} |
-{type: "decrement10"} |
-{type: "reset"};
-
-function counterReducer(state: number, action: counterAction){
-  switch(action.type){
-    case 'increment':
-      return state + (action.payload ?? 1);
-    case 'decrement':
-      return state - 1;
-    case 'decrement10':
-        return state - 10;
-    case'reset':
-        return 0;
-    default:
-      action satisfies never; // this is a type guard, it will throw an error if the action is not of type counterAction
-      return state;
-  }
-}
 
 export default function App() {
 
